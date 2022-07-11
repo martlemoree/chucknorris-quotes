@@ -1,6 +1,6 @@
-<template>
+  <template>
   <div class="quote-wrapper">
-    <img alt="chuck-norris" src="../assets/chuck-norris.png" class="img" />
+    <img @click="loadRandomQuote" alt="chuck-norris" src="../assets/chuck-norris.png" class="img" />
     <h1 class="quote">"{{ randomQuote }}"</h1>
   </div>
 </template>
@@ -10,13 +10,22 @@ export default {
   name: "ChuckNorrisQuote",
   data() {
     return {
-      randomQuote:
-        "Wenn alles funktioniert, steht hier ein Chuck Norris Spruch.",
+      randomQuote: []
     };
   },
   methods: {
     loadRandomQuote() {
-      // ToDo: Rufen Sie hier den Rest-Endpunkt des Servers auf
+      const endpoint = 'http://localhost:3000/api/v1/quotes'
+      const requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      }
+      const randomInt = this.getRandomInt(79)
+
+      fetch(endpoint, requestOptions)
+      .then(response => response.json())
+      .then(randomQuote => this.randomQuote.push(randomQuote))
+      .catch(error => console.log('error', error))
     },
     getRandomInt(maxExclusive) {
       return Math.floor(Math.random() * maxExclusive);
